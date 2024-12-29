@@ -26,6 +26,7 @@ Follow these steps to set up and run the application on your local system:
 1. **Create a Virtual Environment**
    ```bash
    python -m venv env
+   
 2. **Activate the Virtual Environment**
 On Windows:
    ```bash
@@ -40,7 +41,7 @@ On macOS/Linux:
    pip install -r requirements.txt
 
 4. **Run the Application Start the application using the following command:**
-   ```bash
+
    python app.py
 
 ##Technologies Used
