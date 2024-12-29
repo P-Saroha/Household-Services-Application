@@ -31,7 +31,6 @@ Follow these steps to set up and run the application on your local system:
 On Windows:
    ```bash
    env\Scripts\activate
-
 On macOS/Linux:
    ```bash
    source env/bin/activate
@@ -41,7 +40,7 @@ On macOS/Linux:
    pip install -r requirements.txt
 
 4. **Run the Application Start the application using the following command:**
-
+   ```bash
    python app.py
 
 ##Technologies Used
