@@ -43,12 +43,12 @@ On macOS/Linux:
    ```bash
    python app.py
 
-###Technologies Used
+### Technologies Used
 - Backend: Flask
 - Frontend: Jinja2, Bootstrap
 - Database: SQLite
 - Contributions
 
-###Contributions are welcome! Feel free to fork the repository and submit a pull request with your changes.
+### Contributions are welcome! Feel free to fork the repository and submit a pull request with your changes.
 
 
