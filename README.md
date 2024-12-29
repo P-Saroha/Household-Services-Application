@@ -35,7 +35,7 @@ On Windows:
 On macOS/Linux:
    ```bash
    source env/bin/activate
-
+   ```
 3. **Install Dependencies Install the required Python packages from the requirements.txt file:**
    ```bash
    pip install -r requirements.txt
