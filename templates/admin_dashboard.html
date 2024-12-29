@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href = "static/admin.css">
+    <!-- <style>
+        h2 {
+            color: #ffffff;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        table {
+            margin-bottom: 30px;
+        }
+
+        .btn-action {
+            margin-right: 5px;
+        }
+
+        .create-btn {
+            margin-top: 10px;
+        }
+
+        .status-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .status-btn.active {
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .status-btn:not(.active) {
+            opacity: 0.6;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #343a40;
+        }
+
+        .navbar-brand {
+            color: #ffffff !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+            margin-right: 15px;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+            text-decoration: underline;
+        }
+
+        .navbar-nav .nav-item.active .nav-link {
+            color: #ffc107 !important;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-toggler-icon {
+            color: #ffffff;
+        }
+
+        .navbar {
+            background-color: #343a40;
+            padding-top: 0rem;
+            padding-bottom: 0rem;
+        }
+
+        /* Button Styling */
+        .btn-action {
+            margin: 0 5px;
+        }
+
+        .btn-action:hover {
+            text-decoration: none;
+        }
+    </style> -->
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}"></a>
+            <h2>Welcome to Admin</h2>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_search') }}">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_summary') }}">Summary</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3>Services</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Base Price</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td>{{ service.id }}</td>
+                    <td>{{ service.name }}</td>
+                    <td>${{ service.base_price }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_service', service_id=service.id) }}" class="btn btn-warning">Edit</a>
+                        <form action="{{ url_for('delete_service', service_id=service.id) }}" method="POST"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('create_service') }}" class="btn btn-primary my-3">Create New Service</a>
+
+        <!-- Professionals Management -->
+        <h3 class="mt-4">Professionals</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Experience (Yrs)</th>
+                    <th>Service Name</th>
+                    <th>Resume</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for professional in professionals %}
+                <tr>
+                    <td>{{ professional.id }}</td>
+                    <td>{{ professional.username }}</td>
+                    <td>{{ professional.experience }}</td>
+                    <td>{{ professional.service_type }}</td>
+                    <td>
+                        <a href="{{ url_for('serve_resume', filename=professional.resume_file_path) }}"
+                            target="_blank">View Resume</a>
+                    </td>
+                    <td>
+                        {% if professional.status == 'pending' %}
+                        <form action="{{ url_for('update_professional_status', professional_id=professional.id) }}"
+                            method="POST" style="display: inline;">
+                            <input type="hidden" name="status" value="approved">
+                            <button type="submit" class="btn btn-success btn-action">Accept</button>
+                        </form>
+                        <form action="{{ url_for('update_professional_status', professional_id=professional.id) }}"
+                            method="POST" style="display: inline;">
+                            <input type="hidden" name="status" value="rejected">
+                            <button type="submit" class="btn btn-danger btn-action">Reject</button>
+                        </form>
+                        {% elif professional.status == 'approved' %}
+                        <span class="text-success">Approved</span>
+                        <form action="{{ url_for('update_professional_status', professional_id=professional.id) }}"
+                            method="POST" style="display: inline;">
+                            <input type="hidden" name="status" value="rejected">
+                            <button type="submit" class="btn btn-danger btn-action">Reject</button>
+                        </form>
+                        {% elif professional.status == 'rejected' %}
+                        <span class="text-danger">Rejected</span>
+                        <form action="{{ url_for('update_professional_status', professional_id=professional.id) }}"
+                            method="POST" style="display: inline;">
+                            <input type="hidden" name="status" value="approved">
+                            <button type="submit" class="btn btn-success btn-action">Accept</button>
+                        </form>
+                        {% endif %}
+                        <form action="{{ url_for('delete_professional', professional_id=professional.id) }}"
+                            method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary btn-action"
+                                onclick="return confirm('Are you sure you want to delete this professional?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Customer Management -->
+        <h3>Customers</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Pincode</th>
+                    <th>Mobile</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.id }}</td>
+                    <td>{{ customer.username }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.address }}</td>
+                    <td>{{ customer.pincode }}</td>
+                    <td>{{ customer.mobile }}</td>
+                    <td>{{ customer.status }}</td>
+                    <td>
+                        {% if customer.status != customer.STATUS_REJECTED %}
+                        <form action="{{ url_for('block_customer', customer_id=customer.id) }}" method="post"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-warning btn-action">Block</button>
+                        </form>
+                        {% else %}
+                        <form action="{{ url_for('unblock_customer', customer_id=customer.id) }}" method="post"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-success btn-action">UNBlock</button>
+                        </form>
+                        {% endif %}
+                        <form action="{{ url_for('delete_customer', customer_id=customer.id) }}" method="post"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-action"
+                                onclick="return confirm('Are you sure you want to delete this customer?')">Delete</button>
+                        </form>
+                        
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Service Requests -->
+        <h3>Service Requests</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer Name</th>
+                    <th>Professional Name</th>
+                    <th>Requested Date</th>
+                    <th>Service Name</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in service_requests %}
+                <tr>
+                    <td>{{ request.id }}</td>
+                    <td>{{ request.customer.username }}</td>
+                    <td>{{ request.service_professional.username }}</td>
+                    <td>{{ request.request_date.strftime("%Y-%m-%d") }}</td>
+                    <td>{{ request.service.name }}</td>
+                    <td>{{ request.rating or "Not Rated Yet" }}</td>
+                    <td>
+                        {% if request.status == "Accepted" %}
+                        <span >Accepted By Professional</span>
+                        {% elif request.status == "Rejected" %}
+                        <span >Rejected by Professional</span>
+                        {% elif request.status == "Closed" %}
+                        <span>Closed By Customer</span>
+                        {% endif %}
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

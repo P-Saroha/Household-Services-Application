@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Service Request Summary</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center text-primary mb-5">Customer Service Request Summary</h1>
+        
+        <!-- Bar Graph Section -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2>Service Request Status Summary</h2>
+                <img src="data:image/png;base64,{{ image }}" alt="Customer Service Request Status Summary" class="img-fluid">
+            </div>
+        </div>
+
+        <!-- Service Request Details Section -->
+        <div class="mt-5">
+            <h3>Service Request Status Details:</h3>
+            <ul class="list-group">
+                {% for status, count in status_dict.items() %}
+                    <li class="list-group-item">
+                        <strong>{{ status }}:</strong> {{ count }} requests
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

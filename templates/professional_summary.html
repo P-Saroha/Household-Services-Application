@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Professional Summary</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center text-success mb-5">Service Professional Summary</h1>
+        
+        <!-- Average Rating Section -->
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <h2>Average Rating for Each Professional</h2>
+                <ul class="list-group">
+                    {% for professional, avg_rating in avg_rating_dict.items() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ professional }}
+                            <span class="badge badge-success badge-pill">{{ avg_rating | round(2) }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Bar Graph Section -->
+            <div class="col-md-6 text-center">
+                <h2>Service Request Status Summary</h2>
+                <img src="data:image/png;base64,{{ image }}" alt="Service Request Status Summary" class="img-fluid">
+            </div>
+        </div>
+
+        <!-- Service Request Details Section -->
+        <div class="mt-5">
+            <h3>Service Request Status Details:</h3>
+            <ul class="list-group">
+                {% for status, count in status_dict.items() %}
+                    <li class="list-group-item">
+                        <strong>{{ status }}:</strong> {{ count }} requests
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Professional Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            background-color: #008080; /* Deep teal background */
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px; /* Adds space between navbar and content */
+        }
+
+        header h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header nav a {
+            color: white;
+            font-weight: bold;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        .navbar-right {
+            display: flex;
+            justify-content: flex-end;
+            flex-grow: 1;
+        }
+
+        h3 {
+            margin-top: 30px;
+        }
+
+        .table-container {
+            margin-bottom: 40px;
+        }
+
+        table {
+            margin-top: 20px;
+        }
+
+        .btn-container form {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="container">
+            <h2>
+                Welcome {{ session['professional_name'] }} to Professional Dashboard
+            </h2>
+            <div class="navbar-right">
+                <a href="{{ url_for('professional_dashboard') }}">Home</a>
+                <a href="{{ url_for('service_professional_search') }}">Search</a>
+                <a href="{{ url_for('professional_summary') }}">Summary</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Today's Pending Services -->
+        <div class="table-container">
+            <h3>Pending Service Requests</h3>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer Name</th>
+                        <th>Phone Number</th>
+                        <th>Customer Address</th>
+                        <th>Service Name</th>
+                        <th>Request Date</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service_request in today_services %}
+                    <tr>
+                        <td>{{ service_request.id }}</td>
+                        <td>{{ service_request.customer.username }}</td>
+                        <td>{{ service_request.customer.mobile }}</td>
+                        <td>{{ service_request.customer.address }}</td>
+                        <td>{{ service_request.service.name }}</td>
+                        <td>{{ service_request.request_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ service_request.status }}</td>
+                        <td class="text-center btn-container">
+                            <form action="{{ url_for('accept_service', service_id=service_request.id) }}" method="POST">
+                                <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                            </form>
+                            <form action="{{ url_for('reject_service', service_id=service_request.id) }}" method="POST">
+                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+<!-- Closed Services -->
+<div class="table-container">
+    <h3>Closed Services</h3>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Request ID</th>
+                <th>Customer Name</th>
+                <th>Phone Number</th>
+                <th>Customer Address</th>
+                <th>Request Date</th>
+                <th>Rating</th>
+                <th>Remarks</th>  <!-- New column for Remarks -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in closed_service_request %}
+            <tr>
+                <td>{{ service.id }}</td>
+                <td>{{ service.customer.username }}</td>
+                <td>{{ service.customer.mobile }}</td>
+                <td>{{ service.customer.address }}</td>
+                <td>{{ service.request_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ service.rating }}</td>
+                <td>{{ service.remarks if service.remarks else 'No remarks' }}</td> <!-- Display Remarks -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

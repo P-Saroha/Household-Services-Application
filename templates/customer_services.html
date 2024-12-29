@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Search Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color: #ffb74d;
+            padding: 20px;
+            text-align: center;
+        }
+        header h2 {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        header nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .search-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        .search-label {
+            color: #ff8f00;
+            font-weight: bold;
+        }
+        .search-results table {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h2>Welcome to Customer</h2>
+        <nav>
+            <a href="{{ url_for('customer_dashboard') }}" class="btn btn-link">Home</a>
+            <a href="{{ url_for('customer_search') }}" class="btn btn-link">Search</a>
+            <a href="{{ url_for('customer_summary') }}" class="btn btn-link">Summary</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-link">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <!-- Search Functionality Section -->
+        <h3 class="search-label">Search Service Professionals</h3>
+        <div class="search-container">
+            <form action="{{ url_for('customer_search') }}" method="GET" class="form-inline">
+                <!-- Service Type Filter -->
+                <label for="service_type" class="mr-2">Service Type</label>
+                <select class="form-control mr-3" name="service_type" id="service_type">
+                    <option value="" selected>All Services</option>
+                    {% for service in services %}
+                        <option value="{{ service.name }}">{{ service.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- Location Filter -->
+                <label for="location" class="mr-2">Location (Pincode)</label>
+                <input type="text" class="form-control mr-3" id="location" name="location" placeholder="Enter pincode">
+
+                <!-- Experience Filter -->
+                <label for="experience" class="mr-2">Min. Experience (Years)</label>
+                <input type="number" class="form-control mr-3" id="experience" name="experience" min="0" placeholder="Experience">
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+
+        <!-- Search Results Section -->
+        <div class="search-results">
+            <h3>Search Results</h3>
+            <div class="list-group">
+                {% if professionals %}
+                    {% for professional in professionals %}
+                        <div class="list-group-item">
+                            <h5 class="mb-1">{{ professional.username }}</h5>
+                            <p class="mb-1"><strong>Service Type:</strong> {{ professional.service_type }}</p>
+                            <p class="mb-1"><strong>Experience:</strong> {{ professional.experience }} years</p>
+                            <p class="mb-1"><strong>Location:</strong> {{ professional.pincode }}</p>
+                            <p class="mb-1"><strong>Contact:</strong> {{ professional.mobile_no }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center">No professionals found matching the search criteria.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

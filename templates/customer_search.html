@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Search</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header class="bg-primary text-white py-3 mb-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0">Welcome {{session["customer_name"]}} to Customer Search</h1>
+            <nav>
+                <a href="{{ url_for('customer_dashboard') }}" class="text-white me-3">Home</a>
+                <a href="{{ url_for('customer_search') }}" class="text-white me-3">Search</a>
+                <a href="{{ url_for('customer_summary') }}" class="text-white me-3">Summary</a>
+                <a href="{{ url_for('logout') }}" class="text-white">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Customer Search</h1>
+
+    <!-- Search Form -->
+    <form action="{{ url_for('customer_search') }}" method="get" class="border p-3 rounded bg-light">
+        <div class="form-row">
+            <!-- Dropdown to select search criteria -->
+            <div class="form-group col-md-4">
+                <label for="search_criteria">Search By:</label>
+                <select name="search_criteria" id="search_criteria" class="form-control">
+                    <option value="service_type">Service Type</option>
+                    <option value="location">Location</option>
+                    <option value="pincode">Pincode</option>
+                </select>
+            </div>
+
+            <!-- Input field for search keyword -->
+            <div class="form-group col-md-8">
+                <label for="search_query">Search Query:</label>
+                <input type="text" name="search_query" id="search_query" class="form-control" placeholder="Enter service type, location, or pincode based on selected criteria">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Search</button>
+    </form>
+
+    <!-- Results Section -->
+    {% if professionals %}
+        <h2 class="text-center mt-5">Results ({{ professionals|length }} Found)</h2>
+        <table class="table table-striped mt-3">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Service Type</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Pincode</th>
+                    <th scope="col">Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for professional in professionals %}
+                    <tr>
+                        <td>{{ professional.username }}</td>
+                        <td>{{ professional.service_type }}</td>
+                        <td>{{ professional.address }}</td>
+                        <td>{{ professional.pincode }}</td>
+                        <td>{{ professional.mobile_no }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning mt-5 text-center" role="alert">
+            No professionals found for the "{{ search_query }}" based on the selected criteria. Please adjust your search and try again.
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

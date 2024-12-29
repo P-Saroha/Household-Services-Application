@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Summary</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center text-primary mb-5">Admin Summary</h1>
+        
+        <!-- Average Rating Section -->
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <h2>Average Rating for Service Professionals</h2>
+                <ul class="list-group">
+                    {% for professional, avg_rating in avg_rating_dict.items() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ professional }}
+                            <span class="badge badge-primary badge-pill">{{ avg_rating | round(2) }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Bar Graph Section -->
+            <div class="col-md-6 text-center">
+                <h2>Service Request Status Summary</h2>
+                <img src="data:image/png;base64,{{ image }}" alt="Service Request Status Summary" class="img-fluid">
+            </div>
+        </div>
+
+        <!-- Service Request Details Section -->
+        <div class="mt-5">
+            <h3>Service Requests Details:</h3>
+            <ul class="list-group">
+                {% for service in service_requests %}
+                    <li class="list-group-item">
+                        <strong>Status:</strong> {{ service.status }} - 
+                        <strong>Details:</strong> {{ service.remarks or "No details available" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

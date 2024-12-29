@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Search</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        h2 {
+            color: #ffffff;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #343a40;
+        }
+
+        .navbar-brand, .navbar-nav .nav-link {
+            color: #ffffff !important;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+            text-decoration: underline;
+        }
+
+        .navbar-nav .nav-item.active .nav-link {
+            color: #ffc107 !important;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .navbar {
+            background-color: #343a40;
+            padding-top: 0rem; /* Adjust these values as needed */
+            padding-bottom: 0rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}"></a><h2>Welcome to Admin Search</h2>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_search') }}">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_summary') }}">Summary</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <form method="POST" action="{{ url_for('admin_search') }}">
+            <div class="form-group">
+                <label for="category">Select Category</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="service_requests" {% if category=='service_requests' %}selected{% endif %}>Service Requests</option>
+                    <option value="customers" {% if category=='customers' %}selected{% endif %}>Customers</option>
+                    <option value="professionals" {% if category=='professionals' %}selected{% endif %}>Professionals</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="search_query">Search</label>
+                <input type="text" name="search_query" id="search_query" class="form-control"
+                    placeholder="Enter search term" value="{{ request.form.search_query }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <!-- Service Requests Table -->
+        {% if category == 'service_requests' %}
+        <h3 class="mt-5">Service Requests</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer Name</th>
+                    <th>Professional Name</th>
+                    <th>Requested Date</th>
+                    <th>Service Name</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in service_requests %}
+                <tr>
+                    <td>{{ request.id }}</td>
+                    <td>{{ request.customer.username }}</td>
+                    <td>{{ request.service_professional.username }}</td>
+                    <td>{{ request.request_date.strftime("%Y-%m-%d") }}</td>
+                    <td>{{ request.service.name }}</td>
+                    <td>{{ request.rating }}</td>
+                    <td>{{ request.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <!-- Customers Table -->
+        {% if category == 'customers' %}
+        <h3 class="mt-5">Customers</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Mobile No</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Pin Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.id }}</td>
+                    <td>{{ customer.username }}</td>
+                    <td>{{ customer.mobile }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.address }}</td>
+                    <td>{{ customer.pincode }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <!-- Professionals Table -->
+        {% if category == 'professionals' %}
+        <h3 class="mt-5">Service Professionals</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Experience (Yrs)</th>
+                    <th> Mobile No</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Service Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for professional in professionals %}
+                <tr>
+                    <td>{{ professional.id }}</td>
+                    <td>{{ professional.username }}</td>
+                    <td>{{ professional.experience }}</td>
+                    <td>{{ professional.mobile_no }}</td>
+                    <td>{{ professional.email }}</td>
+                    <td>{{ professional.address }}</td>
+                    <td>{{ professional.service_type }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</body>
+
+</html>

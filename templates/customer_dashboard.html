@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> Optional custom CSS -->
+</head>
+<body>
+    <header class="bg-primary text-white py-3 mb-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0">Welcome {{session["customer_name"]}} to Customer Dashboard</h1>
+            <nav>
+                <a href="{{ url_for('customer_dashboard') }}" class="text-white me-3">Home</a>
+                <a href="{{ url_for('customer_search') }}" class="text-white me-3">Search</a>
+                <a href="{{ url_for('customer_summary') }}" class="text-white me-3">Summary</a>
+                <a href="{{ url_for('logout') }}" class="text-white">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Service Selection Section with Cards -->
+        <section id="services" class="mb-4">
+            <h2 class="h4 mb-3">Looking For?</h2>
+            <div class="row">
+                {% for service in services %}
+                <div class="col-md-3 mb-3">
+                    <div class="card shadow-sm"> 
+                        <div class="card-body text-center"> 
+                             <h5 class="card-title">{{ service.name }}</h5>
+                             <p> {{ service.description }}</p>
+                             <p> ${{ service.base_price }}</p>
+                             <a href="{{ url_for('book_service', service_id=service.id)}}" class="btn btn-outline-primary">Select</a>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+<!-- Service History Section -->
+<section id="service-history" class="mb-4">
+    <h2 class="h4">Service History</h2>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Service Name</th>
+                <th>Professional Name</th>
+                <th>Professional Phone No</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>Rate Service</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for history in service_history %}
+            <tr>
+                <td>{{ history.id }}</td>
+                <td>{{ history.service.name }}</td>
+                <td>
+                    {% if history.status == 'Rejected' %}
+                        {% if history.service_professional.id %}
+                            {{ history.service_professional.username }}
+                        {% endif %}
+                    {% else %}
+                        {{ history.service_professional.username }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if history.status == 'Rejected' %}
+                        {% if history.service_professional.id %}
+                            {{ history.service_professional.mobile_no }}
+                        {% endif %}
+                    {% else %}
+                        {{ history.service_professional.mobile_no }}
+                    {% endif %}
+                </td>
+                <td>{{ history.status }}</td>
+                <td>
+                    {% if history.status == 'Accepted' %}
+                        <!-- Close Service Button -->
+                        <form action="{{ url_for('close_service', service_id=history.id) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-primary btn-sm mt-1">Close Service</button>
+                        </form>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ history.status }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if (history.status == 'Closed' or history.status == 'Accepted') and history.rating is none %}
+                    <form action="{{ url_for('rate_service', service_id=history.id) }}" method="post">
+                        <select name="rating" class="form-select form-select-sm">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <textarea name="remarks" class="form-control mt-2" placeholder="Enter your remarks here..."></textarea>
+                        <button type="submit" class="btn btn-primary btn-sm mt-1">Submit Rating and Remarks</button>
+                    </form>
+                    {% elif history.rating %}
+                    <span class="badge bg-info">{{ history.rating }} / 5</span>
+                    {% if history.remarks %}
+                    <p class="mt-2"><strong>Remarks:</strong> {{ history.remarks }}</p>
+                    {% endif %}
+                    {% elif history.status == 'Rejected' %}
+                    <p class="text-muted">No Rating Available</p>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Signup</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <h2 class="text-center">Create Customer Account</h2>
+        <form action="{{ url_for('create_customer_account') }}" method="POST" class="mx-auto" style="max-width: 400px;">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="form-group mt-3">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group mt-3">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group mt-3">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" class="form-control" required>
+            </div>
+            <div class="form-group mt-3">
+                <label for="pincode">Pincode:</label>
+                <input type="text" id="pincode" name="pincode" class="form-control" required>
+            </div>
+            <div class="form-group mt-3">
+                <label for="mobile">Mobile:</label>
+                <input type="text" id="mobile" name="mobile" class="form-control" maxlength="10" required>
+            </div>
+                        
+            <button type="submit" class="btn btn-success btn-block mt-4">Sign Up</button>
+        </form>
+        <p class="text-center mt-3">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </div>
+</body>
+
+</html>

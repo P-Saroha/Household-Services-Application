@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Professional Signup</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <h2 class="text-center">Create Service Professional Account</h2>
+        <form action="{{ url_for('create_service_professional_account') }}" method="POST" enctype="multipart/form-data" class="mx-auto" style="max-width: 400px;">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="service_type">Service Type:</label>
+                <select id="service_type" name="service_id" class="form-control" required>
+                    {% for service in services %}
+                    <option value="{{ service.id }}">{{ service.name }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+            <div class="form-group">
+                <label for="experience">Experience (in years):</label>
+                <input type="number" id="experience" name="experience" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="pincode">Pincode:</label>
+                <input type="text" id="pincode" name="pincode" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" class="form-control" required />
+            </div>
+            <div class="form-group mt-3">
+                <label for="mobile_no">Mobile:</label>
+                <input type="text" id="mobile_no" name="mobile_no" class="form-control" maxlength="10" required>
+            </div>            
+            <div class="form-group">
+                <label for="resume_file">Upload Resume:</label>
+                <input type="file" id="resume_file" name="resume_file" class="form-control" accept=".pdf, .doc, .docx" required />
+            </div>
+            <br>
+            <button type="submit" class="btn btn-success btn-block mt-4">Sign Up</button>
+        </form>
+        <p class="text-center mt-3">
+            Already have an account?
+            <a href="{{ url_for('login') }}">Login</a>
+        </p>
+    </div>
+</body>
+</html>

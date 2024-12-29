@@ -1,0 +1,83 @@
+h2 {
+    color: #ffffff;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+.container {
+    margin-top: 30px;
+}
+
+table {
+    margin-bottom: 30px;
+}
+
+.btn-action {
+    margin-right: 5px;
+}
+
+.create-btn {
+    margin-top: 10px;
+}
+
+.status-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.status-btn.active {
+    opacity: 1;
+    pointer-events: none;
+}
+
+.status-btn:not(.active) {
+    opacity: 0.6;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #343a40;
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+    margin-right: 15px;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffc107 !important;
+    text-decoration: underline;
+}
+
+.navbar-nav .nav-item.active .nav-link {
+    color: #ffc107 !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-toggler-icon {
+    color: #ffffff;
+}
+
+.navbar {
+    background-color: #343a40;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
+
+/* Button Styling */
+.btn-action {
+    margin: 0 5px;
+}
+
+.btn-action:hover {
+    text-decoration: none;
+}

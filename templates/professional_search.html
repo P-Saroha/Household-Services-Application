@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Search Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+
+        header {
+            background-color: #008080;
+            /* Deep teal background */
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            /* Adds space between navbar and content */
+        }
+
+        header h2 {
+            color: white;
+            margin: 0;
+        }
+
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header nav a {
+            color: white;
+            font-weight: bold;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        .navbar-right {
+            display: flex;
+            justify-content: flex-end;
+            flex-grow: 1;
+        }
+
+        h3 {
+            margin-top: 30px;
+        }
+
+        table {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<header>
+    <nav class="container">
+        <h2>
+            Welcome {{ session['professional_name'] }} to Professional Search
+        </h2>
+        <div class="navbar-right">
+            <a href="{{ url_for('professional_dashboard') }}">Home</a>
+            <a href="{{ url_for('service_professional_search') }}">Search</a>
+            <a href="{{ url_for('admin_summary') }}">Summary</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+</header>
+
+    <div class="container mt-4">
+        <!-- Search Functionality Section -->
+        <h3 class="search-label">Search Functionality</h3>
+        <div class="search-container">
+            <form action="{{ url_for('service_professional_search') }}" method="GET" class="form-inline">
+                <label for="search_by" class="mr-2">Search by:</label>
+                <select name="search_by" id="search_by" class="form-control mr-3">
+                    <option value="date">Date</option>
+                    <option value="location">Location</option>
+                    <option value="pin">Pin Code</option>
+                </select>
+                <input type="text" name="search_text" placeholder="Search text" class="form-control mr-3">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <p class="mt-2"><small>(Example: 07/08/2024 for date)</small></p>
+        </div>
+
+        <!-- Search Results Section -->
+        <div class="search-results">
+            <h3>Search Results</h3>
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer Name</th>
+                        <th>Contact Phone</th>
+                        <th>Address </th>
+                        <th>Date</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if search_results %}
+                    {% for customer in search_results %}
+                    <tr>
+                        <td>{{ customer.id }}</td>
+                        <td>{{ customer.username }}</td>
+                        <td>{{ customer.mobile }}</td>
+                        <td>{{ customer.address }}</td>
+                        <td>{{ customer.service_requests[0].request_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ customer.service_requests[0].rating }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">No results found.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>
